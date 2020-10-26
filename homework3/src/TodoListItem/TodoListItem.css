@@ -1,0 +1,28 @@
+.todo-list-item {
+  display: flex;
+  justify-content: space-between;
+  border: 2px solid black;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+/* .todo-list-item:not(:last-child) {
+    margin-bottom: 4px;
+  } */
+
+li {
+  list-style-type: none;
+  padding: 1px;
+}
+
+.todo-list {
+  width: 50vw;
+}
+
+.todo-list-item.important .todo-list-item-content {
+  font-weight: bold;
+  color: darkmagenta;
+}
+.todo-list-item.completed .todo-list-item-content {
+  text-decoration: line-through;
+}
