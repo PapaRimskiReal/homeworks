@@ -4,46 +4,23 @@ import './TodoListItem.css'
 
 export default class TodoListItem extends Component {
 
-    state = {
-        important: false,
-        completed: false
-    };
-
-    onLabelClick = () => {
-        this.setState(({important}) => {
-            return {
-                important: !important
-            }
-        })
-    };
-
-    onCompletedClick = () => {
-        this.setState(({completed}) => {
-            return {
-                completed: !completed
-            }
-        })
-    };
-
     render() {
 
-        const { content } = this.props;
-        const { important, completed } = this.state;
+        const { content, onDeleted, onToggleImportant, onToggleCompleted, important, completed } = this.props;
 
         let classNames = 'todo-list-item';
-        if (important) {classNames += ' important'};
-        if (completed) {classNames += ' completed'};
+        if (important) { classNames += ' important' };
+        if (completed) { classNames += ' completed' };
 
         return (
             <span className={classNames}>
                 <span className="todo-list-item-content"
-                    // style={style}
-                    onClick={this.onLabelClick}>
+                    onClick={onToggleImportant}>
                     {content}
                 </span>
                 <div>
-                    <button className="button-complete" onClick={this.onCompletedClick}>Complete</button>
-                    <button className="button-delete">Delete</button>
+                    <button className="button-complete" onClick={onToggleCompleted}>Complete</button>
+                    <button className="button-delete" onClick={onDeleted}>Delete</button>
                 </div>
             </span>
         );
