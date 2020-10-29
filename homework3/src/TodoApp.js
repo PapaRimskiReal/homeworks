@@ -5,6 +5,8 @@ import AddTodoForm from './AddTodoForm';
 // import initialTodos from './initialTodos.js';
 import ItemStatusFilter from './ItemStatusFilter';
 import Marker from './Marker';
+import { v4 as uuidv4 } from 'uuid';
+import SearchPanel from './SearchPanel'
 
 export default class TodoApp extends Component {
 
@@ -23,9 +25,9 @@ export default class TodoApp extends Component {
       content,
       important: false,
       completed: false,
-      id: this.maxID++
-    }
-  }
+      id: uuidv4()
+    };
+  };
 
   deleteItem = (id) => {
     this.setState(({ initialTodos }) => {
@@ -44,7 +46,7 @@ export default class TodoApp extends Component {
   addItem = (text) => {
 
     const newItem = this.createTodoItem(text);
-
+    console.log(newItem.id);
 
     this.setState(({ initialTodos }) => {
 
@@ -93,15 +95,19 @@ export default class TodoApp extends Component {
   render() {
 
     const completedItems = this.state.initialTodos.filter((el) => el.completed).length;
-    const importantItems = this.state.initialTodos.filter((el) => el.important).length;
+    const importantItemsLeft = this.state.initialTodos.filter((el) => el.important && !el.completed).length;
     const uncompletedItems = this.state.initialTodos.length - completedItems;
 
     return (
       <div>
         <Header />
-        <Marker completed={completedItems} important={importantItems} uncompleted={uncompletedItems} />
+        <Marker completed={completedItems} important={importantItemsLeft} uncompleted={uncompletedItems} />
         <main className="content-wrapper">
+        <div className="top-panel d-flex">
+        <SearchPanel
+          searchItem={this.searchItem} />
           <ItemStatusFilter />
+          </div>
           <TodoList todos={this.state.initialTodos}
             onDeleted={this.deleteItem}
             onToggleImportant={this.onToggleImportant}

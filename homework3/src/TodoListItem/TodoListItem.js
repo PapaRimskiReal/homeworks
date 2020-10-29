@@ -12,6 +12,10 @@ export default class TodoListItem extends Component {
         if (important) { classNames += ' important' };
         if (completed) { classNames += ' completed' };
 
+        let btnCompleteLabel = '';
+        if (completed) { btnCompleteLabel = 'Revert' };
+        if (!completed) { btnCompleteLabel = 'Complete' };
+
         return (
             <span className={classNames}>
                 <span className="todo-list-item-content"
@@ -19,7 +23,7 @@ export default class TodoListItem extends Component {
                     {content}
                 </span>
                 <div>
-                    <button className="button-complete" onClick={onToggleCompleted}>Complete</button>
+                    <button className="button-complete" onClick={onToggleCompleted}>{btnCompleteLabel}</button>
                     <button className="button-delete" onClick={onDeleted}>Delete</button>
                 </div>
             </span>
