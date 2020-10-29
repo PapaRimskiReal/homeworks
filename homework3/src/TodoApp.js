@@ -10,14 +10,13 @@ import SearchPanel from './SearchPanel'
 
 export default class TodoApp extends Component {
 
-  maxID = 100;
-
   state = {
     initialTodos: [
       this.createTodoItem('Create page structure'),
       this.createTodoItem('Add some styles'),
       this.createTodoItem('Add dynamic functionality'),
-    ]
+    ],
+     term: ''
   };
 
   createTodoItem(content) {
@@ -46,7 +45,6 @@ export default class TodoApp extends Component {
   addItem = (text) => {
 
     const newItem = this.createTodoItem(text);
-    console.log(newItem.id);
 
     this.setState(({ initialTodos }) => {
 
@@ -91,8 +89,24 @@ export default class TodoApp extends Component {
     });
   };
 
+  onSearchInputChange = (term) => {
+    this.setState({term});
+  }
+
+  search(items, term) {
+    if (term.length === 0) {
+      return items;
+    }
+
+    return items.filter((item) => {
+      return item.content.toLowerCase().indexOf(term.toLowerCase()) > -1;
+    })
+  }
 
   render() {
+
+    const { initialTodos, term } = this.state;
+    const visibleItems = this.search(initialTodos, term);
 
     const completedItems = this.state.initialTodos.filter((el) => el.completed).length;
     const importantItemsLeft = this.state.initialTodos.filter((el) => el.important && !el.completed).length;
@@ -103,12 +117,12 @@ export default class TodoApp extends Component {
         <Header />
         <Marker completed={completedItems} important={importantItemsLeft} uncompleted={uncompletedItems} />
         <main className="content-wrapper">
-        <div className="top-panel d-flex">
-        <SearchPanel
-          searchItem={this.searchItem} />
-          <ItemStatusFilter />
+          <div className="top-panel d-flex">
+            <SearchPanel
+            onSearchInputChange={this.onSearchInputChange} />
+            <ItemStatusFilter />
           </div>
-          <TodoList todos={this.state.initialTodos}
+          <TodoList todos={visibleItems}
             onDeleted={this.deleteItem}
             onToggleImportant={this.onToggleImportant}
             onToggleCompleted={this.onToggleCompleted}
