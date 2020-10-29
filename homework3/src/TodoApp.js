@@ -16,7 +16,8 @@ export default class TodoApp extends Component {
       this.createTodoItem('Add some styles'),
       this.createTodoItem('Add dynamic functionality'),
     ],
-     term: ''
+    term: '',
+    filter: 'completed'
   };
 
   createTodoItem(content) {
@@ -90,7 +91,11 @@ export default class TodoApp extends Component {
   };
 
   onSearchInputChange = (term) => {
-    this.setState({term});
+    this.setState({ term });
+  }
+
+  onFilterChange = (filter) => {
+    this.setState({ filter });
   }
 
   search(items, term) {
@@ -103,10 +108,24 @@ export default class TodoApp extends Component {
     })
   }
 
+  filter(items, filter) {
+
+    switch (filter) {
+      case 'all':
+        return items;
+      case 'completed':
+        return items.filter((item) => item.completed);
+      case 'uncompleted':
+        return items.filter((item) => !item.completed);
+      default:
+        return items;
+    };
+  };
+
   render() {
 
-    const { initialTodos, term } = this.state;
-    const visibleItems = this.search(initialTodos, term);
+    const { initialTodos, term, filter } = this.state;
+    const visibleItems = this.filter(this.search(initialTodos, term), filter);
 
     const completedItems = this.state.initialTodos.filter((el) => el.completed).length;
     const importantItemsLeft = this.state.initialTodos.filter((el) => el.important && !el.completed).length;
@@ -119,8 +138,9 @@ export default class TodoApp extends Component {
         <main className="content-wrapper">
           <div className="top-panel d-flex">
             <SearchPanel
-            onSearchInputChange={this.onSearchInputChange} />
-            <ItemStatusFilter />
+              onSearchInputChange={this.onSearchInputChange} />
+            <ItemStatusFilter filter={filter}
+              onFilterChange={this.onFilterChange} />
           </div>
           <TodoList todos={visibleItems}
             onDeleted={this.deleteItem}
